@@ -1,0 +1,44 @@
+org: marcocanopoli
+app: aws-omninext-nodejs
+service: aws-omninext-nodejs
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: '20201221'
+  region: eu-west-3
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamoDB:*
+      Resource:
+        - arn:aws:dynamodb:eu-west-3:762194999048:table/UsersTable
+
+functions:
+  getUserById:
+    handler: src/getUserById.handler
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: get
+  createUser:
+    handler: src/createUser.handler
+    events:
+      - httpApi:
+          path: /users
+          method: post
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: UsersTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
