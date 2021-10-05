@@ -9,7 +9,7 @@ const createUser = async (event) => {
 
     const { username } = JSON.parse(event.body);
     
-    if (typeof username !== "string") {
+    if (typeof username !== "string" || username == '') {
         return {
             statusCode: 400,
             body: JSON.stringify('Invalid username. username must be a string'),
