@@ -8,6 +8,14 @@ const createUser = async (event) => {
     const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
     const { username } = JSON.parse(event.body);
+    
+    if (typeof username !== "string") {
+        return {
+            statusCode: 400,
+            body: JSON.stringify('Invalid username. username must be a string'),
+        };
+    }
+
     const id = v4();
     const createdAt = new Date().toISOString();
 
